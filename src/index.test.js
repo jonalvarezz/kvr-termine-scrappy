@@ -12,9 +12,12 @@ const navigationTabActiveClassName = "statusleiste_aktiv";
 const calendarClassName = "nat_calendar";
 const bookableWeekdayClassName = "nat_calendar_weekday_bookable";
 
+const URL =
+  "https://www46.muenchen.de/termin/index.php?cts=1080627&fbclid=IwAR3i-hdRrLjSBcXCwAOWnlLOQZoUj4oyhn-jJw1brmEJE1a_GI_0_bUO-Mk";
+
 describe("Munich International Office", () => {
   beforeAll(async () => {
-    await page.goto("https://www46.muenchen.de/view-abh/termin/");
+    await page.goto(URL);
   }, 10000);
 
   it("should have an available date", async () => {
@@ -34,6 +37,6 @@ describe("Munich International Office", () => {
       type: "png"
     });
     const date = page.$(availableDateSelector);
-    console.log(date.textContent);
+    console.log(date.textContent, URL);
   });
 });

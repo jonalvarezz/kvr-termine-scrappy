@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "jest"
+    "start": "./run.sh"
   },
   "jest": {
     "preset": "jest-puppeteer"
