@@ -3,6 +3,6 @@ module.exports = {
     dumpio: true,
     notify: true,
     notifyMode: "success",
-    headless: true
-  }
+    headless: true,
+  },
 };

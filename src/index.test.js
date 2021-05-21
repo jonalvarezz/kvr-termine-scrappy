@@ -1,42 +1,48 @@
-const blueCardSelectName = "CASETYPES[Aufenthaltserlaubnis Blaue Karte EU]";
-const submitButtonClassName = "WEB_APPOINT_FORWARDBUTTON";
-const navigationTabs = {
-  confirm: "NAV_CONFIRM",
-  contact: "NAV_CONTACT",
-  time: "NAV_TIME",
-  date: "NAV_DATE",
-  location: "NAV_LOCATION",
-  casetypes: "NAV_CASETYPES"
-};
-const navigationTabActiveClassName = "statusleiste_aktiv";
-const calendarClassName = "nat_calendar";
-const bookableWeekdayClassName = "nat_calendar_weekday_bookable";
+const URL = "https://sirfy.de/sirfy-de-corona-impfung-muenchen/";
 
-const URL =
-  "https://www46.muenchen.de/termin/index.php?cts=1080627&fbclid=IwAR3i-hdRrLjSBcXCwAOWnlLOQZoUj4oyhn-jJw1brmEJE1a_GI_0_bUO-Mk";
+/**
+ * Documentation:
+ * @see https://pptr.dev/#?product=Puppeteer&version=v9.1.1&show=api-class-page
+ * @see https://jestjs.io/docs/using-matchers
+ */
 
-describe("Munich International Office", () => {
+describe("COVID vacciness availability", () => {
   beforeAll(async () => {
     await page.goto(URL);
   }, 10000);
 
-  it("should have an available date", async () => {
-    jest.setTimeout(1000 * 5 * 60);
-    await expect(page).toSelect(`select[name="${blueCardSelectName}"]`, "1");
-    await expect(page).toClick(`input[class="${submitButtonClassName}"]`);
-    await page.waitForNavigation();
-    await expect(page).toMatchElement(
-      `li#${navigationTabs.location}.${navigationTabActiveClassName}`
+  it("should have an available appointment", async () => {
+    jest.setTimeout(1000 * 10 * 60);
+    await expect(page).toClick(`span[id="tarteaucitronPersonalize"]`);
+    await expect(page).toMatchElement(`div#mainwrapper-div-e1 .accordion`);
+
+    const accordion = await page.$(`div#mainwrapper-div-e1 .accordion`);
+
+    await expect(accordion).toMatchElement("#accordion__body-0");
+    await expect(accordion).toMatchElement("#accordion__body-1");
+    await expect(accordion).toMatchElement("#accordion__body-2");
+
+    const appointments1 = await accordion.$eval(
+      `#accordion__body-0 tbody`,
+      (node) => node.childElementCount
+    );
+    const appointments2 = await accordion.$eval(
+      `#accordion__body-1 tbody`,
+      (node) => node.childElementCount
+    );
+    const appointments3 = await accordion.$eval(
+      `#accordion__body-2 tbody`,
+      (node) => node.childElementCount
     );
 
-    const availableDateSelector = `table.${calendarClassName} a.${bookableWeekdayClassName}`;
-    await expect(page).toMatchElement(availableDateSelector);
-    await page.screenshot({
-      path: "screenshot.png",
-      fullPage: true,
-      type: "png"
-    });
-    const date = page.$(availableDateSelector);
-    console.log(date.textContent, URL);
+    const total = appointments1 + appointments2 + appointments3;
+
+    expect(total).toBeGreaterThan(0);
+
+    // await page.screenshot({
+    //   path: "screenshot.png",
+    //   fullPage: true,
+    //   type: "png",
+    // });
   });
 });

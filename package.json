@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./run.sh"
+    "start": "./run.sh && npm run alert",
+    "alert": "say \"Attention. Vacciness appointments are available. Attention. Vacciness appointments are available.\""
   },
   "jest": {
     "preset": "jest-puppeteer"
